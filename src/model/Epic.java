@@ -1,8 +1,10 @@
 package model;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-public class Epic extends Task{
+
+public class Epic extends Task {
 
     private HashMap<Integer, SubTask> subTask = new HashMap<>();
 
@@ -14,7 +16,7 @@ public class Epic extends Task{
         return new ArrayList<>(subTask.values());
     }
 
-    public void clearHashMapSubTask(){
+    public void clearHashMapSubTask() {
         subTask.clear();
     }
 

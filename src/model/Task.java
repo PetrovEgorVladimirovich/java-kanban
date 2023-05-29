@@ -1,4 +1,5 @@
 package model;
+
 public class Task {
     protected String name;
     protected String description;
@@ -24,6 +25,14 @@ public class Task {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override

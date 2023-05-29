@@ -2,6 +2,7 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 import service.Manager;
+
 public class Main {
     public static void main(String[] args) {
         Manager manager = new Manager();
@@ -52,4 +53,4 @@ public class Main {
         System.out.println(manager.getAllEpic());
         System.out.println(manager.getAllSubTask());
     }
-    }
+}

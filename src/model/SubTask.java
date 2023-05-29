@@ -1,5 +1,6 @@
 package model;
-public class SubTask extends Task{
+
+public class SubTask extends Task {
     private int idEpic;
 
     public SubTask(String name, String description) {
