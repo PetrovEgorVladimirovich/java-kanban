@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final List<Task> TASK_HISTORY = new ArrayList<>(); // Список просмотра задач
+    private final static List<Task> TASK_HISTORY = new ArrayList<>(); // Список просмотра задач
 
     @Override
     public void add(Task task) { // Добавление просмотра задачи в список
