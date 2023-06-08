@@ -9,9 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
+    private final HashMap<Integer, Task> TASKS = new HashMap<>(); // Хранение обычных задач.
+    private final HashMap<Integer, Epic> EPICS = new HashMap<>(); // Хранение больших задач.
+    private final HashMap<Integer, SubTask> SUB_TASKS = new HashMap<>(); // Хранение подзадач для больших задач.
     private int id = 0;
 
-    @Override
     public int addId() {
         return ++id;
     } // Генерация id.
@@ -183,5 +185,10 @@ public class InMemoryTaskManager implements TaskManager {
         if (isSubTaskInProgress) {
             epic.setStatus(Status.IN_PROGRESS);
         }
+    }
+
+    @Override
+    public List<Task> getHistory() { // Получение списка просмотров задач
+        return Managers.getDefaultHistory().getHistory();
     }
 }

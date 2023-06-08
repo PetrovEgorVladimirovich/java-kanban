@@ -8,13 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
-
-    HashMap<Integer, Task> TASKS = new HashMap<>(); // Хранение обычных задач.
-    HashMap<Integer, Epic> EPICS = new HashMap<>(); // Хранение больших задач.
-    HashMap<Integer, SubTask> SUB_TASKS = new HashMap<>(); // Хранение подзадач для больших задач.
-
-    int addId(); // Генерация id.
-
     List<Task> getAllTask();// Получение списка всех обычных задач.
 
     List<Epic> getAllEpic();// Получение списка всех больших задач.
@@ -56,4 +49,6 @@ public interface TaskManager {
     List<SubTask> getSubTaskByEpic(Epic epic);// Получение списка подзадач у конкретной большой задачи.
 
     void countStatusEpic(Epic epic);// Анализ статуса большой задачи.
+
+    List<Task> getHistory(); // Получение списка просмотров задач
 }

@@ -6,7 +6,6 @@ import service.*;
 public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
-        HistoryManager historyManager = Managers.getDefaultHistory();
 
         Task task = taskManager.developTask(new Task("Обычная задача.", "Описание: обычная задача."));
         Task task1 = taskManager.developTask(new Task("Обычная задача 1.", "Описание: обычная задача 1."));
@@ -58,19 +57,24 @@ public class Main {
         System.out.println(taskManager.getByIdEpic(6));
         System.out.println(taskManager.getByIdTask(2));
         System.out.println(taskManager.getByIdSubTask(7));
-        System.out.println("\n" + historyManager.getHistory());
+        System.out.println("\n" + taskManager.getHistory());
+
         System.out.println("\n" + taskManager.getByIdEpic(6));
         System.out.println(taskManager.getByIdTask(2));
         System.out.println(taskManager.getByIdSubTask(7));
-        System.out.println("\n" + historyManager.getHistory());
+        System.out.println("\n" + taskManager.getHistory());
+
         System.out.println("\n" + taskManager.getByIdSubTask(7));
         System.out.println(taskManager.getByIdSubTask(7));
-        System.out.println("\n" + historyManager.getHistory());
+        System.out.println("\n" + taskManager.getHistory());
+
         System.out.println("\n" + taskManager.getByIdSubTask(7));
-        System.out.println("\n" + historyManager.getHistory());
+        System.out.println("\n" + taskManager.getHistory());
+
         System.out.println("\n" + taskManager.getByIdSubTask(7));
-        System.out.println("\n" + historyManager.getHistory());
+        System.out.println("\n" + taskManager.getHistory());
+
         System.out.println("\n" + taskManager.getByIdSubTask(7));
-        System.out.println("\n" + historyManager.getHistory());
+        System.out.println("\n" + taskManager.getHistory());
     }
 }
