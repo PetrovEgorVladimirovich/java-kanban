@@ -55,20 +55,33 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getByIdTask(int id) { // Получение обычной задачи по id.
-        Managers.getDefaultHistory().add(TASKS.get(id));
-        return TASKS.get(id);
+        if (TASKS.containsKey(id)) {
+            Managers.getDefaultHistory().add(TASKS.get(id));
+            return TASKS.get(id);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Epic getByIdEpic(int id) { // Получение большой задачи по id.
-        Managers.getDefaultHistory().add(EPICS.get(id));
-        return EPICS.get(id);
+        if (EPICS.containsKey(id)) {
+            Managers.getDefaultHistory().add(EPICS.get(id));
+            return EPICS.get(id);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public SubTask getByIdSubTask(int id) { // Получение подзадачи для большой задачи по id.
-        Managers.getDefaultHistory().add(SUB_TASKS.get(id));
-        return SUB_TASKS.get(id);
+        if (SUB_TASKS.containsKey(id)) {
+            Managers.getDefaultHistory().add(SUB_TASKS.get(id));
+            return SUB_TASKS.get(id);
+        } else {
+            return null;
+        }
+
     }
 
     @Override

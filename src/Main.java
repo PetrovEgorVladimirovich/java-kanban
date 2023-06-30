@@ -139,6 +139,18 @@ public class Main {
 
         System.out.println("\n" + "\n" + "\n");
 
+        taskManager.getByIdEpic(epic1.getId());
+        System.out.println("\n" + taskManager.getHistory());
+
+        taskManager.getByIdTask(task1.getId());
+        System.out.println("\n" + taskManager.getHistory());
+
+        taskManager.getByIdSubTask(subTask2.getId());
+        System.out.println("\n" + taskManager.getHistory());
+
+
+        taskManager.deleteByIdEpic(epic1.getId());
+        System.out.println("\n" + taskManager.getHistory());
         taskManager.deleteByIdTask(task1.getId());
         System.out.println("\n" + taskManager.getHistory());
         taskManager.deleteByIdTask(task2.getId());
@@ -158,6 +170,8 @@ public class Main {
         taskManager.deleteByIdEpic(epic2.getId());
         System.out.println("\n" + taskManager.getHistory());
         taskManager.deleteByIdEpic(epic3.getId());
+        System.out.println("\n" + taskManager.getHistory());
+        taskManager.getByIdEpic(epic3.getId());
         System.out.println("\n" + taskManager.getHistory());
     }
 }

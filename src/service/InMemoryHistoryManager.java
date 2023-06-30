@@ -5,20 +5,24 @@ import model.Task;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private int size = 0;
+    private static int size = 0;
 
-    private Node<Task> first;
+    private static Node<Task> first;
 
-    private Node<Task> last;
+    private static Node<Task> last;
 
     private final static Map<Integer, Node<Task>> TASK_HISTORY = new HashMap<>();
+
+    private final static List<Node<Task>> NODES = new ArrayList<>();
 
     @Override
     public void add(Task task) { // Добавление просмотра задачи в список
         if (TASK_HISTORY.containsKey(task.getId())) {
-            TASK_HISTORY.remove(task.getId());
+            NODES.remove(TASK_HISTORY.get(task.getId()));
+            remove(task.getId());
         }
         TASK_HISTORY.put(task.getId(), linkLast(task));
+        NODES.add(TASK_HISTORY.get(task.getId()));
     }
 
     @Override
@@ -29,8 +33,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void remove(int id) {
         if (!TASK_HISTORY.isEmpty()) {
-            TASK_HISTORY.remove(id);
+            NODES.remove(TASK_HISTORY.get(id));
             removeNode(TASK_HISTORY.get(id));
+            TASK_HISTORY.remove(id);
         }
     }
 
@@ -72,23 +77,10 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private List<Task> getTasks() {
-        List<Node<Task>> nodes = new ArrayList<>(TASK_HISTORY.values());
         List<Task> tasks = new ArrayList<>();
-        for (Node<Task> taskNode : nodes) {
+        for (Node<Task> taskNode : NODES) {
             tasks.add(taskNode.data);
         }
         return tasks;
-    }
-
-    private static class Node<T> {
-        public T data;
-        public Node<T> next;
-        public Node<T> prev;
-
-        public Node(Node<T> prev, T data, Node<T> next) {
-            this.data = data;
-            this.next = next;
-            this.prev = prev;
-        }
     }
 }
