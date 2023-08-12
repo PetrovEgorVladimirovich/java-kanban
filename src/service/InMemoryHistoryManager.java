@@ -2,7 +2,10 @@ package service;
 
 import model.Task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private static int size = 0;
@@ -17,10 +20,11 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) { // Добавление просмотра задачи в список
-        if (TASK_HISTORY.containsKey(task.getId())) {
-            NODES.remove(TASK_HISTORY.get(task.getId()));
-            remove(task.getId());
-        }
+        TASK_HISTORY.computeIfPresent(task.getId(), (k, v) -> {
+            NODES.remove(TASK_HISTORY.get(k));
+            remove(k);
+            return null;
+        });
         TASK_HISTORY.put(task.getId(), linkLast(task));
         NODES.add(TASK_HISTORY.get(task.getId()));
     }
@@ -35,7 +39,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (!TASK_HISTORY.isEmpty()) {
             NODES.remove(TASK_HISTORY.get(id));
             removeNode(TASK_HISTORY.get(id));
-            TASK_HISTORY.remove(id);
         }
     }
 
@@ -82,5 +85,20 @@ public class InMemoryHistoryManager implements HistoryManager {
             tasks.add(taskNode.data);
         }
         return tasks;
+    }
+
+    private void linkFirst(Task task) {
+        final Node<Task> f = first;
+        final Node<Task> newNode = new Node<>(null, task, f);
+        first = newNode;
+        if (f == null)
+            last = newNode;
+        else
+            f.prev = newNode;
+        size++;
+    }
+
+    public int getSize() {
+        return size;
     }
 }

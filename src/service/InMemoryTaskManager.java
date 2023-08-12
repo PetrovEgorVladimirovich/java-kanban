@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HashMap<Integer, Task> TASKS = new HashMap<>(); // Хранение обычных задач.
-    private final HashMap<Integer, Epic> EPICS = new HashMap<>(); // Хранение больших задач.
-    private final HashMap<Integer, SubTask> SUB_TASKS = new HashMap<>(); // Хранение подзадач для больших задач.
+    protected HashMap<Integer, Task> TASKS = new HashMap<>(); // Хранение обычных задач.
+    protected HashMap<Integer, Epic> EPICS = new HashMap<>(); // Хранение больших задач.
+    protected HashMap<Integer, SubTask> SUB_TASKS = new HashMap<>(); // Хранение подзадач для больших задач.
     private int id = 0;
 
     public int addId() {
@@ -81,7 +81,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return null;
         }
-
     }
 
     @Override
