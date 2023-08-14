@@ -1,4 +1,7 @@
-package service;
+package manager;
+
+import service.InMemoryHistoryManager;
+import service.InMemoryTaskManager;
 
 public final class Managers { // Утилитарный класс
     private Managers() {

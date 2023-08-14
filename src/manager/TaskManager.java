@@ -1,8 +1,9 @@
-package service;
+package manager;
 
 import model.Epic;
 import model.SubTask;
 import model.Task;
+import service.assistants.Status;
 
 import java.util.List;
 

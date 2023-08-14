@@ -1,6 +1,6 @@
 package model;
 
-import service.Status;
+import service.assistants.Status;
 
 public class Task {
     protected String name;

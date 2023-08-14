@@ -1,6 +1,8 @@
 package service;
 
+import manager.HistoryManager;
 import model.Task;
+import service.assistants.Node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,15 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private static int size = 0;
-
-    private static Node<Task> first;
 
     private static Node<Task> last;
 
-    private final static Map<Integer, Node<Task>> TASK_HISTORY = new HashMap<>();
+    private static final Map<Integer, Node<Task>> TASK_HISTORY = new HashMap<>();
 
-    private final static List<Node<Task>> NODES = new ArrayList<>();
+    private static final List<Node<Task>> NODES = new ArrayList<>();
 
     @Override
     public void add(Task task) { // Добавление просмотра задачи в список
@@ -47,11 +46,9 @@ public class InMemoryHistoryManager implements HistoryManager {
         final Node<Task> newNode = new Node<>(l, task, null);
 
         last = newNode;
-        if (l == null)
-            first = newNode;
-        else
+        if (l != null) {
             l.next = newNode;
-        size++;
+        }
         return newNode;
     }
 
@@ -60,9 +57,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             final Node<Task> next = node.next;
             final Node<Task> prev = node.prev;
 
-            if (prev == null) {
-                first = next;
-            } else {
+            if (prev != null) {
                 prev.next = next;
                 node.prev = null;
             }
@@ -75,7 +70,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
 
             node.data = null;
-            size--;
         }
     }
 
@@ -85,20 +79,5 @@ public class InMemoryHistoryManager implements HistoryManager {
             tasks.add(taskNode.data);
         }
         return tasks;
-    }
-
-    private void linkFirst(Task task) {
-        final Node<Task> f = first;
-        final Node<Task> newNode = new Node<>(null, task, f);
-        first = newNode;
-        if (f == null)
-            last = newNode;
-        else
-            f.prev = newNode;
-        size++;
-    }
-
-    public int getSize() {
-        return size;
     }
 }
