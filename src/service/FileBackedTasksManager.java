@@ -22,7 +22,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE, StandardCharsets.UTF_8))) {
-            String title = " id,type,name,status,description,epic\n";
+            String title = " id,type,name,status,description,startTime,duration,endTime,epic\n";
             String history = historyToString(Managers.getDefaultHistory());
             writer.write(title);
             for (Task task : super.getAllTask()) {
@@ -138,48 +138,54 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return subTask;
     }
 
-    public String toStringTask(Task task) {
-        return String.format(" %d,%s,%s,%s,%s\n",
-                task.getId(), Type.TASK, task.getName(), task.getStatus(), task.getDescription());
+    private String toStringTask(Task task) {
+        return String.format(" %d,%s,%s,%s,%s,%s,%d,%s\n",
+                task.getId(), Type.TASK, task.getName(), task.getStatus(), task.getDescription(), task.getStartTime(), task.getDuration(), task.getEndTime());
     }
 
-    public String toStringEpic(Epic epic) {
-        return String.format(" %d,%s,%s,%s,%s\n",
-                epic.getId(), Type.EPIC, epic.getName(), epic.getStatus(), epic.getDescription());
+    private String toStringEpic(Epic epic) {
+        return String.format(" %d,%s,%s,%s,%s,%s,%d,%s\n",
+                epic.getId(), Type.EPIC, epic.getName(), epic.getStatus(), epic.getDescription(), epic.getStartTime(), epic.getDuration(), epic.getEndTime());
     }
 
-    public String toStringSubTask(SubTask subTask) {
-        return String.format(" %d,%s,%s,%s,%s,%d\n",
+    private String toStringSubTask(SubTask subTask) {
+        return String.format(" %d,%s,%s,%s,%s,%s,%d,%s,%d\n",
                 subTask.getId(), Type.SUBTASK, subTask.getName(),
-                subTask.getStatus(), subTask.getDescription(), subTask.getIdEpic());
+                subTask.getStatus(), subTask.getDescription(), subTask.getStartTime(), subTask.getDuration(), subTask.getEndTime(), subTask.getIdEpic());
     }
 
-    public Task fromStringTask(String value) {
+    private Task fromStringTask(String value) {
         String[] values = value.split(",");
         Task task = new Task(values[2], values[4]);
         task.setId(Integer.parseInt(values[0]));
         task.setStatus(Status.valueOf(values[3]));
+        task.setStartTime(values[5]);
+        task.setDuration(Long.parseLong(values[6]));
         return task;
     }
 
-    public Epic fromStringEpic(String value) {
+    private Epic fromStringEpic(String value) {
         String[] values = value.split(",");
         Epic epic = new Epic(values[2], values[4]);
         epic.setId(Integer.parseInt(values[0]));
         epic.setStatus(Status.valueOf(values[3]));
+        epic.setStartTime(values[5]);
+        epic.setDuration(Long.parseLong(values[6]));
         return epic;
     }
 
-    public SubTask fromStringSubTask(String value) {
+    private SubTask fromStringSubTask(String value) {
         String[] values = value.split(",");
         SubTask subTask = new SubTask(values[2], values[4]);
         subTask.setId(Integer.parseInt(values[0]));
         subTask.setStatus(Status.valueOf(values[3]));
-        subTask.setIdEpic(Integer.parseInt(values[5]));
+        subTask.setStartTime(values[5]);
+        subTask.setDuration(Long.parseLong(values[6]));
+        subTask.setIdEpic(Integer.parseInt(values[8]));
         return subTask;
     }
 
-    public static String historyToString(HistoryManager manager) {
+    private static String historyToString(HistoryManager manager) {
         StringBuilder sb = new StringBuilder();
         for (Task task : manager.getHistory()) {
             sb.append(task.getId()).append(",");
@@ -191,7 +197,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    public static List<Integer> historyFromString(String value) {
+    private static List<Integer> historyFromString(String value) {
         String[] values = value.split(",");
         List<Integer> list = new ArrayList<>();
         for (String str : values) {

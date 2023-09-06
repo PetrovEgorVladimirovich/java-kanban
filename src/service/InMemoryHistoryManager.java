@@ -80,4 +80,10 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         return tasks;
     }
+
+    @Override
+    public void clear() {
+        TASK_HISTORY.clear();
+        NODES.clear();
+    }
 }

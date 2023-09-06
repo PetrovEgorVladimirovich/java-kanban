@@ -6,6 +6,7 @@ import model.Task;
 import service.assistants.Status;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
     List<Task> getAllTask();// Получение списка всех обычных задач.
@@ -51,4 +52,6 @@ public interface TaskManager {
     void countStatusEpic(Epic epic);// Анализ статуса большой задачи.
 
     List<Task> getHistory(); // Получение списка просмотров задач
+
+    Set<Task> getPrioritizedTasks();
 }
