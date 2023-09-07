@@ -4,7 +4,7 @@ import manager.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.InMemoryTaskManager;
-import service.assistants.Status;
+import service.enums.Status;
 
 import java.util.List;
 import java.util.stream.Collectors;

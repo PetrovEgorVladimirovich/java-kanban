@@ -5,8 +5,8 @@ import manager.TaskManager;
 import model.Epic;
 import model.SubTask;
 import model.Task;
-import service.assistants.Status;
-import service.assistants.TaskValidationException;
+import service.enums.Status;
+import service.exception.TaskValidationException;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -161,6 +161,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(int id, Task task, Status status) { // Обновление обычной задачи.
         if (TASKS.containsKey(id)) {
             tasksSorted.remove(TASKS.get(id));
+            validate(task);
             task.setStatus(status);
             TASKS.put(id, task);
             tasksSorted.add(task);
@@ -181,6 +182,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateSubTask(int id, SubTask subTask, Status status) { // Обновление подзадачи для большой задачи.
         if (SUB_TASKS.containsKey(id)) {
             tasksSorted.remove(SUB_TASKS.get(id));
+            validate(subTask);
             subTask.setStatus(status);
             SubTask subTaskLast = SUB_TASKS.get(id);
             Epic epic = EPICS.get(subTaskLast.getIdEpic());

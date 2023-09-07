@@ -4,7 +4,8 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 import org.junit.jupiter.api.Test;
-import service.assistants.Status;
+import service.enums.Status;
+import service.exception.TaskValidationException;
 
 import java.util.List;
 import java.util.Set;
@@ -102,20 +103,26 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldDevelopTask() {
-        Task task1 = new Task("Обычная задача.", "Описание: обычная задача.");
+        Task task1 = new Task("Обычная задача 1.", "Описание: обычная задача 1.");
         task1.setStartTime("22.12.2022 16:30");
         task1.setDuration(90);
         taskManager.developTask(task1);
+        Throwable thrown = assertThrows(TaskValidationException.class, () -> taskManager.developTask(task1),
+                "Должно выброситься исключение!");
+        assertNotNull(thrown.getMessage(), "Сообщение исключения не должно быть пустым!");
         List<Task> taskList = taskManager.getAllTask();
         assertEquals(2, taskList.size(), "Обычная задача создаётся некорректно!");
     }
 
     @Test
     void shouldDevelopSubTask() {
-        SubTask subTask1 = new SubTask("Подзадача.", "Описание: подзадача.");
+        SubTask subTask1 = new SubTask("Подзадача 1.", "Описание: подзадача 1.");
         subTask1.setStartTime("22.12.2022 16:30");
         subTask1.setDuration(90);
         taskManager.developSubTask(subTask1);
+        Throwable thrown = assertThrows(TaskValidationException.class, () -> taskManager.developSubTask(subTask1),
+                "Должно выброситься исключение!");
+        assertNotNull(thrown.getMessage(), "Сообщение исключения не должно быть пустым!");
         List<SubTask> subTaskList = taskManager.getAllSubTask();
         assertEquals(2, subTaskList.size(), "Подзадача создаётся некорректно!");
     }
@@ -129,6 +136,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldUpdateTask() {
+        Task task1 = new Task("Обычная задача 1.", "Описание: обычная задача 1.");
+        task1.setStartTime(subTask.getStartTime());
+        task1.setDuration(90);
+        Throwable thrown = assertThrows(TaskValidationException.class,
+                () -> taskManager.updateTask(task.getId(), task1, Status.DONE),
+                "Должно выброситься исключение!");
+        assertNotNull(thrown.getMessage(), "Сообщение исключения не должно быть пустым!");
         taskManager.updateTask(task.getId(), task, Status.DONE);
         assertEquals(Status.DONE, task.getStatus(), "Статус обновлён некорректно!");
         taskManager.updateTask(task.getId() + 1, task, Status.NEW);
@@ -154,6 +168,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldUpdateSubTask() {
+        SubTask subTask1 = new SubTask("Подзадача 1.", "Описание: подзадача 1.");
+        subTask1.setStartTime(task.getStartTime());
+        subTask1.setDuration(90);
+        Throwable thrown = assertThrows(TaskValidationException.class,
+                () -> taskManager.updateSubTask(subTask.getId(), subTask1, Status.DONE),
+                "Должно выброситься исключение!");
+        assertNotNull(thrown.getMessage(), "Сообщение исключения не должно быть пустым!");
         taskManager.updateSubTask(subTask.getId(), subTask, Status.DONE);
         assertEquals(Status.DONE, subTask.getStatus(), "Статус обновлён некорректно!");
         taskManager.updateSubTask(subTask.getId() + 1, subTask, Status.NEW);

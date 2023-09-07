@@ -6,8 +6,8 @@ import manager.TaskManagerTest;
 import model.Epic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.assistants.ManagerSaveException;
-import service.assistants.Type;
+import service.exception.ManagerSaveException;
+import service.enums.Type;
 
 import java.io.*;
 

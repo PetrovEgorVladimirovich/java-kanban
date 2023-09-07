@@ -1,6 +1,6 @@
 package model;
 
-import service.assistants.Status;
+import service.enums.Status;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
