@@ -18,14 +18,22 @@ public class InMemoryTaskManager implements TaskManager {
     private int id = 0;
 
     private final Comparator<Task> comparator = (o1, o2) -> {
-        if (LocalDateTime.parse(o1.getStartTime(), o1.getFormatter())
-                .isAfter(LocalDateTime.parse(o2.getStartTime(), o2.getFormatter()))) {
-            return 1;
-        } else if (LocalDateTime.parse(o1.getStartTime(), o2.getFormatter())
-                .isBefore(LocalDateTime.parse(o2.getStartTime(), o2.getFormatter()))) {
+        if (o1.getStartTime() != null && o2.getStartTime() != null) {
+            if (LocalDateTime.parse(o1.getStartTime(), o1.getFormatter())
+                    .isAfter(LocalDateTime.parse(o2.getStartTime(), o2.getFormatter()))) {
+                return 1;
+            } else if (LocalDateTime.parse(o1.getStartTime(), o2.getFormatter())
+                    .isBefore(LocalDateTime.parse(o2.getStartTime(), o2.getFormatter()))) {
+                return -1;
+            } else {
+                return o2.getId() - o1.getId();
+            }
+        } else if (o1.getStartTime() != null && o2.getStartTime() == null) {
             return -1;
+        } else if (o1.getStartTime() == null && o2.getStartTime() != null) {
+            return 1;
         } else {
-            return 0;
+            return o2.getId() - o1.getId();
         }
     };
 
@@ -36,28 +44,36 @@ public class InMemoryTaskManager implements TaskManager {
     } // Генерация id.
 
     private void validate(Task task) {
-        LocalDateTime startTime = LocalDateTime.parse(task.getStartTime(), task.getFormatter());
-        LocalDateTime endTime = LocalDateTime.parse(task.getEndTime(), task.getFormatter());
-        int result = 0;
+        if (task.getStartTime() != null || task.getEndTime() != null) {
+            LocalDateTime startTime = LocalDateTime.parse(task.getStartTime(), task.getFormatter());
+            LocalDateTime endTime = LocalDateTime.parse(task.getEndTime(), task.getFormatter());
+            int result = 0;
+            List<Task> tasksTimeNull = new ArrayList<>();
 
-        for (Task taskSort : tasksSorted) {
-            LocalDateTime startTimeTask = LocalDateTime.parse(taskSort.getStartTime(), taskSort.getFormatter());
-            LocalDateTime endTimeTask = LocalDateTime.parse(taskSort.getEndTime(), taskSort.getFormatter());
-            if (startTime.isAfter(startTimeTask) && startTime.isBefore(endTimeTask)) {
-                result = 1;
+            for (Task taskSort : tasksSorted) {
+                if (taskSort.getStartTime() != null || taskSort.getEndTime() != null) {
+                    LocalDateTime startTimeTask = LocalDateTime.parse(taskSort.getStartTime(), taskSort.getFormatter());
+                    LocalDateTime endTimeTask = LocalDateTime.parse(taskSort.getEndTime(), taskSort.getFormatter());
+                    if (startTime.isAfter(startTimeTask) && startTime.isBefore(endTimeTask)) {
+                        result = 1;
+                    }
+                    if (endTime.isAfter(startTimeTask) && endTime.isBefore(endTimeTask)) {
+                        result = 1;
+                    }
+                    if (startTime.equals(startTimeTask)) {
+                        result = 1;
+                    }
+                    if (endTime.equals(endTimeTask)) {
+                        result = 1;
+                    }
+                } else {
+                    tasksTimeNull.add(taskSort);
+                }
             }
-            if (endTime.isAfter(startTimeTask) && endTime.isBefore(endTimeTask)) {
-                result = 1;
+            tasksSorted.addAll(tasksTimeNull);
+            if (result == 1) {
+                throw new TaskValidationException("Задача пересекается!");
             }
-            if (startTime.equals(startTimeTask)) {
-                result = 1;
-            }
-            if (endTime.equals(endTimeTask)) {
-                result = 1;
-            }
-        }
-        if (result == 1) {
-            throw new TaskValidationException("Задача пересекается!");
         }
     }
 
@@ -96,6 +112,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Epic epicTest : EPICS.values()) {
             epicTest.clearHashMapSubTask();
             countStatusEpic(epicTest);
+            epicTest.countTime();
         }
     }
 
@@ -130,31 +147,28 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task developTask(Task task) { // Создание обычной задачи.
+    public void developTask(Task task) { // Создание обычной задачи.
         validate(task);
         task.setId(addId());
         task.setStatus(Status.NEW);
         TASKS.put(task.getId(), task);
         tasksSorted.add(task);
-        return task;
     }
 
     @Override
-    public SubTask developSubTask(SubTask subTask) { // Создание подзадачи для большой задачи.
+    public void developSubTask(SubTask subTask) { // Создание подзадачи для большой задачи.
         validate(subTask);
         subTask.setId(addId());
         subTask.setStatus(Status.NEW);
         SUB_TASKS.put(subTask.getId(), subTask);
         tasksSorted.add(subTask);
-        return subTask;
     }
 
     @Override
-    public Epic developEpic(Epic epic) { // Создание большой задачи.
+    public void developEpic(Epic epic) { // Создание большой задачи.
         epic.setId(addId());
         epic.setStatus(Status.NEW);
         EPICS.put(epic.getId(), epic);
-        return epic;
     }
 
     @Override
@@ -174,6 +188,7 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epicLast = EPICS.get(id);
             HashMap<Integer, SubTask> subTask = epicLast.getHashMapSubTask();
             epic.setSubTasks(subTask);
+            epic.countTime();
             EPICS.put(id, epic);
         }
     }
@@ -189,6 +204,7 @@ public class InMemoryTaskManager implements TaskManager {
             subTask.setIdEpic(subTaskLast.getIdEpic());
             SUB_TASKS.put(id, subTask);
             epic.putSubTask(subTask.getId(), subTask);
+            epic.countTime();
             countStatusEpic(epic);
             tasksSorted.add(subTask);
         }
@@ -227,12 +243,14 @@ public class InMemoryTaskManager implements TaskManager {
             epic.removeSubTask(id);
             SUB_TASKS.remove(id);
             countStatusEpic(epic);
+            epic.countTime();
         }
     }
 
     @Override
-    public List<SubTask> getSubTaskByEpic(Epic epic) { // Получение списка подзадач у конкретной большой задачи.
-        if (EPICS.containsValue(epic)) {
+    public List<SubTask> getSubTaskByEpic(int id) { // Получение списка подзадач у конкретной большой задачи.
+        if (EPICS.containsKey(id)) {
+            Epic epic = EPICS.get(id);
             return epic.getSubTasks();
         } else {
             return null;

@@ -29,11 +29,11 @@ public interface TaskManager {
 
     SubTask getByIdSubTask(int id);// Получение подзадачи для большой задачи по id.
 
-    Task developTask(Task task);// Создание обычной задачи.
+    void developTask(Task task);// Создание обычной задачи.
 
-    SubTask developSubTask(SubTask subTask);// Создание подзадачи для большой задачи.
+    void developSubTask(SubTask subTask);// Создание подзадачи для большой задачи.
 
-    Epic developEpic(Epic epic);// Создание большой задачи.
+    void developEpic(Epic epic);// Создание большой задачи.
 
     void updateTask(int id, Task task, Status status);// Обновление обычной задачи.
 
@@ -47,7 +47,7 @@ public interface TaskManager {
 
     void deleteByIdSubTask(int id);// Удаление подзадачи для большой задачи по id.
 
-    List<SubTask> getSubTaskByEpic(Epic epic);// Получение списка подзадач у конкретной большой задачи.
+    List<SubTask> getSubTaskByEpic(int id);// Получение списка подзадач у конкретной большой задачи.
 
     void countStatusEpic(Epic epic);// Анализ статуса большой задачи.
 

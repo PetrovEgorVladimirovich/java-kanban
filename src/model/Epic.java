@@ -1,6 +1,5 @@
 package model;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,15 +37,39 @@ public class Epic extends Task {
         subTasks.remove(id);
     }
 
+    public void setEndTime(String endTime) {
+        if (!endTime.equals("null")) {
+            this.endTime = LocalDateTime.parse(endTime, formatter);
+        } else {
+            this.endTime = null;
+        }
+    }
+
+    public String getEndTimeForEpic() {
+        if (endTime != null) {
+            return endTime.format(formatter);
+        }
+        return null;
+    }
+
     public void countTime() {
         long AllDuration = 0;
+        LocalDateTime dateTimeStart = null;
+        LocalDateTime dataTimeEnd = null;
         for (SubTask subTask : getSubTasks()) {
             AllDuration += subTask.getDuration();
-            if (this.startTime == null || this.startTime.isAfter(subTask.startTime)) {
-                this.startTime = LocalDateTime.parse(subTask.getStartTime(), formatter);
+            if (subTask.startTime != null) {
+                if (dateTimeStart == null || dateTimeStart.isAfter(subTask.startTime)) {
+                    dateTimeStart = subTask.startTime;
+                }
+                if (dataTimeEnd == null || dataTimeEnd.isBefore(subTask.endTime)) {
+                    dataTimeEnd = subTask.endTime;
+                }
             }
         }
-        this.duration = Duration.ofMinutes(AllDuration);
+        this.startTime = dateTimeStart;
+        this.duration = AllDuration;
+        this.endTime = dataTimeEnd;
     }
 
     @Override
@@ -58,8 +81,8 @@ public class Epic extends Task {
                 ", id=" + id +
                 ", status='" + status + '\'' +
                 ", startTime=" + getStartTime() + '\'' +
-                ", duration=" + getDuration() + '\'' +
-                ", endTime=" + getEndTime() + '\'' +
+                ", duration=" + duration + '\'' +
+                ", endTime=" + getEndTimeForEpic() + '\'' +
                 '}';
     }
 }

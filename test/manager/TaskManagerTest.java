@@ -226,11 +226,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldGetSubTaskByEpic() {
-        List<SubTask> subTaskList = taskManager.getSubTaskByEpic(epic);
+        List<SubTask> subTaskList = taskManager.getSubTaskByEpic(epic.getId());
         assertEquals(subTask, subTaskList.get(0), "Подзадача полученная по большой задаче, некорректна!");
         taskManager.clearSubTask();
         taskManager.clearEpic();
-        assertNull(taskManager.getSubTaskByEpic(epic), "Некорректная обработка с пустым списком!");
+        assertNull(taskManager.getSubTaskByEpic(epic.getId()), "Некорректная обработка с пустым списком!");
     }
 
     @Test

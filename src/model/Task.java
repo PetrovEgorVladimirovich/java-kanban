@@ -11,9 +11,10 @@ public class Task {
     protected String description;
     protected int id;
     protected Status status;
-    protected LocalDateTime startTime;
-    protected Duration duration;
-    protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    protected LocalDateTime startTime = null;
+    protected long duration = 0;
+    protected LocalDateTime endTime = null;
+    protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public Task(String name, String description) {
         this.name = name;
@@ -45,27 +46,46 @@ public class Task {
     }
 
     public String getStartTime() {
-        return startTime.format(formatter);
+        if (startTime != null) {
+            return startTime.format(formatter);
+        }
+        return null;
     }
 
     public long getDuration() {
-        return duration.toMinutes();
+        return duration;
     }
 
     public void setStartTime(String startTime) {
-        this.startTime = LocalDateTime.parse(startTime, formatter);
+        if (!startTime.equals("null")) {
+            this.startTime = LocalDateTime.parse(startTime, formatter);
+        } else {
+            this.startTime = null;
+        }
     }
 
     public void setDuration(long duration) {
-        this.duration = Duration.ofMinutes(duration);
+        this.duration = duration;
     }
 
     public String getEndTime() {
-        return startTime.plus(duration).format(formatter);
+        if (startTime != null) {
+            endTime = startTime.plus(Duration.ofMinutes(duration));
+            return endTime.format(formatter);
+        }
+        return null;
     }
 
     public DateTimeFormatter getFormatter() {
         return formatter;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
@@ -76,8 +96,9 @@ public class Task {
                 ", id=" + id +
                 ", status='" + status + '\'' +
                 ", startTime=" + getStartTime() + '\'' +
-                ", duration=" + getDuration() + '\'' +
+                ", duration=" + duration + '\'' +
                 ", endTime=" + getEndTime() + '\'' +
                 '}';
     }
+
 }

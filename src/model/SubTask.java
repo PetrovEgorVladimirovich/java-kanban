@@ -1,7 +1,7 @@
 package model;
 
 public class SubTask extends Task {
-    private int idEpic;
+    private int idEpic = 0;
 
     public SubTask(String name, String description) {
         super(name, description);
@@ -24,7 +24,7 @@ public class SubTask extends Task {
                 ", id=" + id +
                 ", status='" + status + '\'' +
                 ", startTime=" + getStartTime() + '\'' +
-                ", duration=" + getDuration() + '\'' +
+                ", duration=" + duration + '\'' +
                 ", endTime=" + getEndTime() + '\'' +
                 '}';
     }

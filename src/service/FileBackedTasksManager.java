@@ -43,24 +43,21 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Task developTask(Task task) {
+    public void developTask(Task task) {
         super.developTask(task);
         save();
-        return task;
     }
 
     @Override
-    public SubTask developSubTask(SubTask subTask) {
+    public void developSubTask(SubTask subTask) {
         super.developSubTask(subTask);
         save();
-        return subTask;
     }
 
     @Override
-    public Epic developEpic(Epic epic) {
+    public void developEpic(Epic epic) {
         super.developEpic(epic);
         save();
-        return epic;
     }
 
     @Override
@@ -145,7 +142,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private String toStringEpic(Epic epic) {
         return String.format(" %d,%s,%s,%s,%s,%s,%d,%s\n",
-                epic.getId(), Type.EPIC, epic.getName(), epic.getStatus(), epic.getDescription(), epic.getStartTime(), epic.getDuration(), epic.getEndTime());
+                epic.getId(), Type.EPIC, epic.getName(), epic.getStatus(), epic.getDescription(), epic.getStartTime(), epic.getDuration(), epic.getEndTimeForEpic());
     }
 
     private String toStringSubTask(SubTask subTask) {
@@ -171,6 +168,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         epic.setStatus(Status.valueOf(values[3]));
         epic.setStartTime(values[5]);
         epic.setDuration(Long.parseLong(values[6]));
+        epic.setEndTime(values[7]);
         return epic;
     }
 
