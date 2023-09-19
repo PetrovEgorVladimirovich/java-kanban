@@ -28,7 +28,7 @@ public final class Managers { // Утилитарный класс
     }
 
     public static HttpTaskManager getDefaultHttpTask(){
-        return new HttpTaskManager(KVServer.PORT);
+        return new HttpTaskManager("http://localhost:", KVServer.PORT);
     }
 
     public static Gson getGson() {

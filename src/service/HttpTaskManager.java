@@ -22,9 +22,9 @@ public class HttpTaskManager extends FileBackedTasksManager {
     public static final String EPICS_KEY = "epics";
     public static final String HISTORY_KEY = "history";
 
-    public HttpTaskManager(int port) {
+    public HttpTaskManager(String host, int port) {
         super(null);
-        this.client = new KVTaskClient(port);
+        this.client = new KVTaskClient(host, port);
         this.gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     }
 
